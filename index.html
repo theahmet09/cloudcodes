@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Backend Developer | Portfolyo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        ice: {
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            glow: 'rgba(56, 189, 248, 0.35)'
+                        },
+                        java: {
+                            orange: '#f89820',
+                            red: '#5382a1',
+                            spring: '#6db33f',
+                            dark: '#0a0d16',
+                            card: '#111827'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .code-syntax-keyword { color: #ff7b72; }
+        .code-syntax-annotation { color: #d2a8ff; }
+        .code-syntax-string { color: #a5d6ff; }
+        .code-syntax-class { color: #38bdf8; }
+        .code-syntax-comment { color: #8b949e; font-style: italic; }
+        
+        /* Pürüzsüz koyu degrade arka plan */
+        body {
+            background: radial-gradient(circle at 15% 15%, rgba(14, 165, 233, 0.08) 0%, transparent 45%),
+                        radial-gradient(circle at 85% 65%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+                        linear-gradient(180deg, #070913 0%, #0c1122 50%, #070913 100%);
+            background-attachment: fixed;
+        }
+
+        /* Buz Mavisi Hover & Glow Efektleri */
+        .ice-card {
+            background: linear-gradient(145deg, rgba(17, 24, 39, 0.8) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ice-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(56, 189, 248, 0.85);
+            box-shadow: 0 12px 30px -5px rgba(56, 189, 248, 0.28), 
+                        0 0 15px 1px rgba(34, 211, 238, 0.2);
+        }
+
+        .ice-badge {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body class="bg-[#070913] text-slate-200 font-sans antialiased selection:bg-sky-500 selection:text-white">
+
+    <!-- Üst Menü (Navbar) -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#070913]/85 backdrop-blur-md border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#hero" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
+                    <i class="fa-brands fa-java text-2xl text-slate-950"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-bold text-lg tracking-tight text-white font-mono flex items-center">
+                        dev<span class="text-sky-400">.java</span>()
+                    </span>
+                    <span class="text-xs text-slate-400">Backend Architect</span>
+                </div>
+            </a>
+
+            <!-- Masaüstü Navigasyon -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#about" class="text-slate-300 hover:text-sky-400 transition-colors">Hakkımda</a>
+                <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Tech Stack</a>
+                <a href="#experience" class="text-slate-300 hover:text-sky-400 transition-colors">Deneyim</a>
+                <a href="#projects" class="text-slate-300 hover:text-sky-400 transition-colors">Projeler</a>
+                <a href="#architecture" class="text-slate-300 hover:text-sky-400 transition-colors">Mimari</a>
+                <a href="#contact" class="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow-lg shadow-sky-500/25 transition-all hover:scale-105">
+                    İletişime Geç
+                </a>
+            </nav>
+
+            <!-- Mobil Menü Butonu -->
+            <button id="mobileMenuBtn" class="md:hidden text-slate-300 hover:text-white p-2 rounded-lg bg-slate-800/60 focus:outline-none">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobil Menü Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-[#070913] border-b border-slate-800 px-6 py-4 space-y-3">
+            <a href="#about" class="block text-slate-300 hover:text-sky-400 py-1 mobile-link">Hakkımda</a>
+            <a href="#skills" class="block text-slate-300 hover:text-sky-400 py-1 mobile-link">Tech Stack</a>
+            <a href="#experience" class="block text-slate-300 hover:text-sky-400 py-1 mobile-link">Deneyim</a>
+            <a href="#projects" class="block text-slate-300 hover:text-sky-400 py-1 mobile-link">Projeler</a>
+            <a href="#architecture" class="block text-slate-300 hover:text-sky-400 py-1 mobile-link">Mimari</a>
+            <a href="#contact" class="block w-full text-center py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 rounded-lg font-bold mobile-link">İletişime Geç</a>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <!-- 1. HERO BÖLÜMÜ -->
+        <section id="hero" class="relative min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16 overflow-hidden">
+            <!-- Arka Plan Yumuşak Buz Mavisi Parıltılar -->
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[32rem] h-[32rem] bg-sky-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+            <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+                <!-- Sol Kolon: Tanıtım -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-sky-500/30 text-xs font-mono text-sky-400 shadow-sm shadow-sky-500/10">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                        <span>Yeni Projelere & Fırsatlara Açık</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                        Merhaba, Ben <span class="bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent">Ahmet Tekin</span>
+                    </h1>
+
+                    <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
+                        Ölçeklenebilir, yüksek performanslı ve mikroservis mimarisine dayalı kurumsal backend çözümleri üreten <span class="text-slate-200 font-medium">Java & Spring Boot Geliştiricisiyim</span>.
+                    </p>
+
+                    <!-- Rozetler -->
+                    <div class="flex flex-wrap gap-2.5 justify-center lg:justify-start pt-2">
+                        <span class="px-3 py-1 rounded-md text-xs font-mono bg-slate-900 text-slate-300 border border-slate-700/80 flex items-center gap-1.5 hover:border-sky-500/50 transition-colors">
+                            <i class="fa-solid fa-bolt text-sky-400"></i> Spring Boot 3
+                        </span>
+                        <span class="px-3 py-1 rounded-md text-xs font-mono bg-slate-900 text-slate-300 border border-slate-700/80 flex items-center gap-1.5 hover:border-sky-500/50 transition-colors">
+                            <i class="fa-solid fa-cubes text-cyan-400"></i> Microservices
+                        </span>
+                        <span class="px-3 py-1 rounded-md text-xs font-mono bg-slate-900 text-slate-300 border border-slate-700/80 flex items-center gap-1.5 hover:border-sky-500/50 transition-colors">
+                            <i class="fa-solid fa-database text-emerald-400"></i> PostgreSQL / Redis
+                        </span>
+                        <span class="px-3 py-1 rounded-md text-xs font-mono bg-slate-900 text-slate-300 border border-slate-700/80 flex items-center gap-1.5 hover:border-sky-500/50 transition-colors">
+                            <i class="fa-brands fa-docker text-blue-400"></i> Docker & K8s
+                        </span>
+                    </div>
+
+                    <!-- Butonlar -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#projects" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-center shadow-lg shadow-sky-500/25 transition-all hover:translate-y-[-2px] flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-code"></i> Projeleri İncele
+                        </a>
+                        <button onclick="downloadCv()" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-sky-500/50 font-semibold text-center transition-all hover:translate-y-[-2px] flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-arrow-down text-sky-400"></i> CV İndir
+                        </button>
+                    </div>
+
+                    <!-- Sosyal İkonlar -->
+                    <div class="flex items-center justify-center lg:justify-start gap-4 pt-4 text-slate-400">
+                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-lg bg-slate-900/80 hover:text-sky-400 hover:border-sky-500/40 border border-slate-800 transition-all" title="GitHub">
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-lg bg-slate-900/80 hover:text-sky-400 hover:border-sky-500/40 border border-slate-800 transition-all" title="LinkedIn">
+                            <i class="fa-brands fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="mailto:developer@example.com" class="p-2.5 rounded-lg bg-slate-900/80 hover:text-sky-400 hover:border-sky-500/40 border border-slate-800 transition-all" title="E-Posta">
+                            <i class="fa-solid fa-envelope text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Sağ Kolon: Terminal / Kod Editörü Görünümü -->
+                <div class="lg:col-span-5">
+                    <div class="rounded-2xl border border-slate-700/80 bg-slate-900/95 shadow-2xl overflow-hidden backdrop-blur-md">
+                        <!-- Terminal Başlığı -->
+                        <div class="px-4 py-3 bg-slate-800/90 border-b border-slate-700/80 flex items-center justify-between text-xs font-mono text-slate-400">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                                <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+                            </div>
+                            <span class="flex items-center gap-1.5 text-slate-300">
+                                <i class="fa-solid fa-file-code text-sky-400"></i> DeveloperController.java
+                            </span>
+                            <span class="text-cyan-400 font-semibold">● Active</span>
+                        </div>
+
+                        <!-- Kod Bloğu -->
+                        <div class="p-5 font-mono text-xs sm:text-sm overflow-x-auto text-slate-300 leading-relaxed">
+                            <pre><code><span class="code-syntax-annotation">@RestController</span>
+<span class="code-syntax-annotation">@RequestMapping</span>(<span class="code-syntax-string">"/api/v1/developer"</span>)
+<span class="code-syntax-keyword">public class</span> <span class="code-syntax-class">DeveloperController</span> {
+
+    <span class="code-syntax-keyword">private final</span> DeveloperService devService;
+
+    <span class="code-syntax-annotation">@GetMapping</span>(<span class="code-syntax-string">"/status"</span>)
+    <span class="code-syntax-keyword">public</span> ResponseEntity&lt;Profile&gt; <span class="text-sky-400">getProfile</span>() {
+        <span class="code-syntax-keyword">return</span> ResponseEntity.ok(
+            Profile.builder()
+                .name(<span class="code-syntax-string">"Ahmet Yılmaz"</span>)
+                .role(<span class="code-syntax-string">"Java Backend Engineer"</span>)
+                .focus(<span class="code-syntax-string">"Distributed Systems & Cloud"</span>)
+                .github(<span class="code-syntax-string">"https://github.com/your-username"</span>)
+                .build()
+        );
+    }
+}</code></pre>
+                        </div>
+
+                        <!-- Konsol Alt Barı -->
+                        <div class="bg-black/50 px-4 py-2 border-t border-slate-800 text-[11px] font-mono text-slate-400 flex items-center justify-between">
+                            <span><i class="fa-solid fa-check text-emerald-400 mr-1"></i> BUILD SUCCESSFUL</span>
+                            <span class="text-sky-400">Java 21 | Spring 3.2.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. HAKKIMDA BÖLÜMÜ -->
+        <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80 bg-slate-900/30">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-xs font-mono tracking-widest text-sky-400 uppercase mb-2">// 01. Profil</h2>
+                    <p class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Yüksek Standartlı Kod & Sistem Mimarisi</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Kart 1 -->
+                    <div class="ice-card p-6 rounded-2xl group">
+                        <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Sağlam Backend</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Spring Boot, Spring Security ve Hibernate/JPA kullanarak hataya dayanıklı, güvenli ve ACID prensiplerine tam uyumlu kurumsal API servisleri inşa ediyorum.
+                        </p>
+                    </div>
+
+                    <!-- Kart 2 -->
+                    <div class="ice-card p-6 rounded-2xl group">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Mikroservis & Asenkron</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Apache Kafka ve RabbitMQ ile olay güdümlü (Event-Driven) sistemler, Eureka/Consul ile servis keşfi ve API Gateway çözümleri geliştiriyorum.
+                        </p>
+                    </div>
+
+                    <!-- Kart 3 -->
+                    <div class="ice-card p-6 rounded-2xl group">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-gauge-high"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Performans & Cloud</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Redis önbellekleme, JVM optimizasyonu (GC tuning), Docker konteynerizasyonu ve CI/CD pipeline süreçleri ile kesintisiz operasyon sağlıyorum.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- İstatistikler -->
+                <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
+                    <div class="p-5 rounded-xl bg-slate-900/50 border border-slate-800">
+                        <span class="block text-3xl sm:text-4xl font-extrabold text-sky-400 font-mono">5+</span>
+                        <span class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Yıl Deneyim</span>
+                    </div>
+                    <div class="p-5 rounded-xl bg-slate-900/50 border border-slate-800">
+                        <span class="block text-3xl sm:text-4xl font-extrabold text-cyan-400 font-mono">15+</span>
+                        <span class="text-xs text-slate-400 mt-1 uppercase tracking-wider">GitHub Repo</span>
+                    </div>
+                    <div class="p-5 rounded-xl bg-slate-900/50 border border-slate-800">
+                        <span class="block text-3xl sm:text-4xl font-extrabold text-blue-400 font-mono">99.9%</span>
+                        <span class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Uptime Hedefi</span>
+                    </div>
+                    <div class="p-5 rounded-xl bg-slate-900/50 border border-slate-800">
+                        <span class="block text-3xl sm:text-4xl font-extrabold text-indigo-400 font-mono">1.2M+</span>
+                        <span class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Günlük İstek/Trafik</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. YETENEKLER & TECH STACK -->
+        <section id="skills" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-xs font-mono tracking-widest text-sky-400 uppercase mb-2">// 02. Yetenekler</h2>
+                    <p class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Teknoloji & Araç Havuzu</p>
+                    <p class="text-slate-400 mt-2 text-sm">Geliştirme süreçlerinde aktif olarak kullandığım ekosistem bileşenleri.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Kategori 1: Core & Frameworks -->
+                    <div class="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                            <i class="fa-brands fa-java text-sky-400 text-xl"></i>
+                            <h3 class="font-semibold text-white">Java & Frameworkler</h3>
+                        </div>
+                        <ul class="space-y-2.5 text-sm">
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Java (11, 17, 21)</span>
+                                <span class="text-xs font-mono text-sky-400 font-bold">95%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Spring Boot 3</span>
+                                <span class="text-xs font-mono text-sky-400 font-bold">92%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Spring Cloud</span>
+                                <span class="text-xs font-mono text-sky-400 font-bold">85%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Hibernate / JPA</span>
+                                <span class="text-xs font-mono text-sky-400 font-bold">90%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Spring Security & JWT</span>
+                                <span class="text-xs font-mono text-sky-400 font-bold">88%</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Kategori 2: Databases & Messaging -->
+                    <div class="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                            <i class="fa-solid fa-database text-cyan-400 text-xl"></i>
+                            <h3 class="font-semibold text-white">Veritabanı & Mesajlaşma</h3>
+                        </div>
+                        <ul class="space-y-2.5 text-sm">
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>PostgreSQL</span>
+                                <span class="text-xs font-mono text-cyan-400 font-bold">90%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Redis (Caching)</span>
+                                <span class="text-xs font-mono text-cyan-400 font-bold">85%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Apache Kafka</span>
+                                <span class="text-xs font-mono text-cyan-400 font-bold">82%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>MongoDB</span>
+                                <span class="text-xs font-mono text-cyan-400 font-bold">78%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Elasticsearch</span>
+                                <span class="text-xs font-mono text-cyan-400 font-bold">75%</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Kategori 3: DevOps & Cloud -->
+                    <div class="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                            <i class="fa-solid fa-cloud text-blue-400 text-xl"></i>
+                            <h3 class="font-semibold text-white">DevOps & Altyapı</h3>
+                        </div>
+                        <ul class="space-y-2.5 text-sm">
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Docker</span>
+                                <span class="text-xs font-mono text-blue-400 font-bold">88%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Kubernetes</span>
+                                <span class="text-xs font-mono text-blue-400 font-bold">72%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>CI/CD (GitLab, Actions)</span>
+                                <span class="text-xs font-mono text-blue-400 font-bold">84%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>AWS (ECS, S3, RDS)</span>
+                                <span class="text-xs font-mono text-blue-400 font-bold">75%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Prometheus & Grafana</span>
+                                <span class="text-xs font-mono text-blue-400 font-bold">80%</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Kategori 4: Best Practices & Test -->
+                    <div class="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                            <i class="fa-solid fa-vial-circle-check text-indigo-400 text-xl"></i>
+                            <h3 class="font-semibold text-white">Mimari & Test</h3>
+                        </div>
+                        <ul class="space-y-2.5 text-sm">
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Clean & Hexagonal Arc</span>
+                                <span class="text-xs font-mono text-indigo-400 font-bold">90%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>JUnit 5 & Mockito</span>
+                                <span class="text-xs font-mono text-indigo-400 font-bold">92%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>Testcontainers</span>
+                                <span class="text-xs font-mono text-indigo-400 font-bold">85%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>SOLID & Design Patterns</span>
+                                <span class="text-xs font-mono text-indigo-400 font-bold">94%</span>
+                            </li>
+                            <li class="flex items-center justify-between text-slate-300">
+                                <span>OpenAPI / Swagger</span>
+                                <span class="text-xs font-mono text-indigo-400 font-bold">95%</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. DENEYİM ZAMAN TÜNELİ -->
+        <section id="experience" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/30 border-t border-slate-800/80">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-xs font-mono tracking-widest text-sky-400 uppercase mb-2">// 03. Kariyer</h2>
+                    <p class="text-3xl sm:text-4xl font-bold tracking-tight text-white">İş & Proje Deneyimleri</p>
+                </div>
+
+                <div class="relative border-l-2 border-slate-800 ml-4 sm:ml-32 space-y-12">
+                    <!-- Deneyim 1 -->
+                    <div class="relative pl-8 sm:pl-10 group">
+                        <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-sky-400 border-4 border-[#070913] group-hover:scale-125 transition-transform shadow-md shadow-sky-400/50"></div>
+                        <span class="hidden sm:block absolute -left-32 top-1 text-xs font-mono text-slate-400">2023 - Günümüz</span>
+
+                        <div class="ice-card p-6 rounded-2xl">
+                            <span class="sm:hidden inline-block text-xs font-mono text-sky-400 mb-2">2023 - Günümüz</span>
+                            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                                <h3 class="text-lg font-bold text-white">Senior Java Backend Engineer</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-medium ice-badge">FinTech Solutions Inc.</span>
+                            </div>
+                            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                                Yüksek işlem hacimli ödeme ağ geçidi mikroservislerinin tasarımı ve geliştirilmesi. Kafka üzerinden asenkron event streaming ve Redis distributed caching mimarisi kuruldu.
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400">
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">Spring Boot 3</span>
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">Kafka</span>
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">PostgreSQL</span>
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">Docker</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deneyim 2 -->
+                    <div class="relative pl-8 sm:pl-10 group">
+                        <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-slate-700 group-hover:bg-cyan-400 border-4 border-[#070913] transition-colors"></div>
+                        <span class="hidden sm:block absolute -left-32 top-1 text-xs font-mono text-slate-400">2021 - 2023</span>
+
+                        <div class="ice-card p-6 rounded-2xl">
+                            <span class="sm:hidden inline-block text-xs font-mono text-cyan-400 mb-2">2021 - 2023</span>
+                            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                                <h3 class="text-lg font-bold text-white">Java Backend Developer</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-medium ice-badge">E-Ticaret Yazılım A.Ş.</span>
+                            </div>
+                            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                                Monolitik e-ticaret uygulamasının mikroservis mimarisine taşınması sürecinde aktif rol alındı. Sipariş ve Envanter servislerinin RESTful API'ları Spring WebFlux ile yeniden geliştirildi.
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400">
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">Java 17</span>
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">Spring Cloud</span>
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">RabbitMQ</span>
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">MongoDB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deneyim 3 -->
+                    <div class="relative pl-8 sm:pl-10 group">
+                        <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-slate-700 group-hover:bg-sky-400 border-4 border-[#070913] transition-colors"></div>
+                        <span class="hidden sm:block absolute -left-32 top-1 text-xs font-mono text-slate-400">2019 - 2021</span>
+
+                        <div class="ice-card p-6 rounded-2xl">
+                            <span class="sm:hidden inline-block text-xs font-mono text-sky-400 mb-2">2019 - 2021</span>
+                            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                                <h3 class="text-lg font-bold text-white">Junior Software Engineer</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-medium ice-badge">Teknoloji Ar-Ge Ltd.</span>
+                            </div>
+                            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                                Kurumsal ERP projelerinde modül geliştirmeleri, veritabanı sorgu optimizasyonları ve birim (unit) test kapsamının %85 üzerine çıkarılması çalışmaları yapıldı.
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400">
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">Java 8/11</span>
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">Hibernate</span>
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">MySQL</span>
+                                <span class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded">JUnit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. PROJELER BÖLÜMÜ (Buz Mavisi Glow & Numaralı Kartlar) -->
+        <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-14">
+                    <h2 class="text-xs font-mono tracking-widest text-sky-400 uppercase mb-2">// 04. Projeler & Kodlar</h2>
+                    <p class="text-3xl sm:text-4xl font-bold tracking-tight text-white">GitHub Depoları & Çalışmalarım</p>
+                    <p class="text-slate-400 mt-2 text-sm">Geliştirdiğim açık kaynak kütüphaneler, backend mimarileri ve mikroservis sistemleri.</p>
+                </div>
+
+                <!-- Proje Kartları Izgarası (Buz Mavisi Glow Efektli) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsGrid">
+                    
+                    <!-- Proje 1 -->
+                    <div class="ice-card rounded-2xl p-6 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <span class="font-mono text-xs px-3 py-1 rounded-full ice-badge font-bold">
+                                    PROJE 01
+                                </span>
+                                <a href="https://github.com/your-username/proje-1" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-sky-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all" title="GitHub Deposu">
+                                    <i class="fa-brands fa-github text-lg"></i>
+                                </a>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-sky-300 transition-colors">
+                                Proje 1: Distributed E-Commerce Backend
+                            </h3>
+
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                                CQRS ve Event Sourcing modelleriyle tasarlanmış, Kafka üzerinden asenkron sipariş/envanter senkronizasyonu sağlayan mikroservis mimarisi.
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 pt-4 border-t border-slate-800/80 mb-4">
+                                <span class="text-sky-400">Spring Boot</span>
+                                <span>•</span>
+                                <span class="text-cyan-400">Kafka</span>
+                                <span>•</span>
+                                <span class="text-blue-400">PostgreSQL</span>
+                            </div>
+
+                            <a href="https://github.com/your-username/proje-1" target="_blank" class="w-full py-2.5 rounded-xl bg-slate-800/90 hover:bg-sky-500 hover:text-slate-950 text-sky-400 border border-slate-700/80 hover:border-transparent font-semibold text-xs transition-all flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-github"></i> GitHub'da İncele <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Proje 2 -->
+                    <div class="ice-card rounded-2xl p-6 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <span class="font-mono text-xs px-3 py-1 rounded-full ice-badge font-bold">
+                                    PROJE 02
+                                </span>
+                                <a href="https://github.com/your-username/proje-2" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-sky-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all" title="GitHub Deposu">
+                                    <i class="fa-brands fa-github text-lg"></i>
+                                </a>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-sky-300 transition-colors">
+                                Proje 2: OAuth2 & JWT Security Server
+                            </h3>
+
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                                Spring Authorization Server tabanlı, MFA desteği, token rotasyonu ve Redis tabanlı merkezi oturum yönetimi içeren kimlik doğrulama servisi.
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 pt-4 border-t border-slate-800/80 mb-4">
+                                <span class="text-sky-400">Spring Security</span>
+                                <span>•</span>
+                                <span class="text-cyan-400">Redis</span>
+                                <span>•</span>
+                                <span class="text-blue-400">JWT</span>
+                            </div>
+
+                            <a href="https://github.com/your-username/proje-2" target="_blank" class="w-full py-2.5 rounded-xl bg-slate-800/90 hover:bg-sky-500 hover:text-slate-950 text-sky-400 border border-slate-700/80 hover:border-transparent font-semibold text-xs transition-all flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-github"></i> GitHub'da İncele <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Proje 3 -->
+                    <div class="ice-card rounded-2xl p-6 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <span class="font-mono text-xs px-3 py-1 rounded-full ice-badge font-bold">
+                                    PROJE 03
+                                </span>
+                                <a href="https://github.com/your-username/proje-3" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-sky-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all" title="GitHub Deposu">
+                                    <i class="fa-brands fa-github text-lg"></i>
+                                </a>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-sky-300 transition-colors">
+                                Proje 3: Cloud-Native K8s & Docker Stack
+                            </h3>
+
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                                Otomatik Helm paketlemeleri, Prometheus & Grafana izleme yapılandırması ve GitHub Actions CI/CD otomasyonu içeren üretime hazır Java şablonu.
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 pt-4 border-t border-slate-800/80 mb-4">
+                                <span class="text-sky-400">Kubernetes</span>
+                                <span>•</span>
+                                <span class="text-cyan-400">Docker</span>
+                                <span>•</span>
+                                <span class="text-blue-400">Grafana</span>
+                            </div>
+
+                            <a href="https://github.com/your-username/proje-3" target="_blank" class="w-full py-2.5 rounded-xl bg-slate-800/90 hover:bg-sky-500 hover:text-slate-950 text-sky-400 border border-slate-700/80 hover:border-transparent font-semibold text-xs transition-all flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-github"></i> GitHub'da İncele <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Proje 4 -->
+                    <div class="ice-card rounded-2xl p-6 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <span class="font-mono text-xs px-3 py-1 rounded-full ice-badge font-bold">
+                                    PROJE 04
+                                </span>
+                                <a href="https://github.com/your-username/proje-4" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-sky-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all" title="GitHub Deposu">
+                                    <i class="fa-brands fa-github text-lg"></i>
+                                </a>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-sky-300 transition-colors">
+                                Proje 4: Real-time Payment Engine
+                            </h3>
+
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                                Dağıtık işlem tutarlılığı için Saga deseni (Orchestration) kullanan, idempotent API standartlarına uygun ödeme orkestrasyon motoru.
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 pt-4 border-t border-slate-800/80 mb-4">
+                                <span class="text-sky-400">Saga Pattern</span>
+                                <span>•</span>
+                                <span class="text-cyan-400">RabbitMQ</span>
+                                <span>•</span>
+                                <span class="text-blue-400">JUnit 5</span>
+                            </div>
+
+                            <a href="https://github.com/your-username/proje-4" target="_blank" class="w-full py-2.5 rounded-xl bg-slate-800/90 hover:bg-sky-500 hover:text-slate-950 text-sky-400 border border-slate-700/80 hover:border-transparent font-semibold text-xs transition-all flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-github"></i> GitHub'da İncele <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Proje 5 -->
+                    <div class="ice-card rounded-2xl p-6 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <span class="font-mono text-xs px-3 py-1 rounded-full ice-badge font-bold">
+                                    PROJE 05
+                                </span>
+                                <a href="https://github.com/your-username/proje-5" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-sky-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all" title="GitHub Deposu">
+                                    <i class="fa-brands fa-github text-lg"></i>
+                                </a>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-sky-300 transition-colors">
+                                Proje 5: Dynamic API Gateway & Rate Limiter
+                            </h3>
+
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                                Token Bucket algoritmasıyla istek sınırlandırma, dinamik filtreleme ve Resilience4j circuit-breaker mekanizmaları barındıran merkezi ağ geçidi.
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 pt-4 border-t border-slate-800/80 mb-4">
+                                <span class="text-sky-400">Spring Gateway</span>
+                                <span>•</span>
+                                <span class="text-cyan-400">Resilience4j</span>
+                                <span>•</span>
+                                <span class="text-blue-400">WebFlux</span>
+                            </div>
+
+                            <a href="https://github.com/your-username/proje-5" target="_blank" class="w-full py-2.5 rounded-xl bg-slate-800/90 hover:bg-sky-500 hover:text-slate-950 text-sky-400 border border-slate-700/80 hover:border-transparent font-semibold text-xs transition-all flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-github"></i> GitHub'da İncele <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Proje 6 -->
+                    <div class="ice-card rounded-2xl p-6 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <span class="font-mono text-xs px-3 py-1 rounded-full ice-badge font-bold">
+                                    PROJE 06
+                                </span>
+                                <a href="https://github.com/your-username/proje-6" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-sky-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all" title="GitHub Deposu">
+                                    <i class="fa-brands fa-github text-lg"></i>
+                                </a>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-sky-300 transition-colors">
+                                Proje 6: Vault Config & Secrets Manager
+                            </h3>
+
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                                HashiCorp Vault ile entegre çalışan, mikroservislerin hassas ortam değişkenlerini ve veritabanı şifrelerini dinamik yöneten starter kütüphanesi.
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 pt-4 border-t border-slate-800/80 mb-4">
+                                <span class="text-sky-400">HashiCorp Vault</span>
+                                <span>•</span>
+                                <span class="text-cyan-400">Config Server</span>
+                                <span>•</span>
+                                <span class="text-blue-400">Security</span>
+                            </div>
+
+                            <a href="https://github.com/your-username/proje-6" target="_blank" class="w-full py-2.5 rounded-xl bg-slate-800/90 hover:bg-sky-500 hover:text-slate-950 text-sky-400 border border-slate-700/80 hover:border-transparent font-semibold text-xs transition-all flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-github"></i> GitHub'da İncele <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. İNTERAKTİF SİSTEM MİMARİSİ (ARCH VISUALIZER) -->
+        <section id="architecture" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/30 border-t border-slate-800/80">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-14">
+                    <h2 class="text-xs font-mono tracking-widest text-sky-400 uppercase mb-2">// 05. Mimari Görselleştirme</h2>
+                    <p class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Mikroservis Ekosistemi</p>
+                    <p class="text-slate-400 mt-2 text-sm">Tipik bir kurumsal Java projesinde kurguladığım veri ve istek akış modeli.</p>
+                </div>
+
+                <div class="p-6 sm:p-10 rounded-3xl bg-slate-950 border border-slate-800 shadow-2xl overflow-x-auto">
+                    <div class="min-w-[650px] flex flex-col items-center space-y-6">
+                        <!-- Katman 1: Client & CDN -->
+                        <div class="w-full flex justify-center">
+                            <div class="px-6 py-3 rounded-xl bg-slate-800 border border-slate-700 text-center shadow-lg">
+                                <span class="text-xs font-mono text-slate-400 block">Kullanıcı / Mobil / Web</span>
+                                <span class="text-sm font-bold text-white flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-mobile-screen"></i> HTTP/HTTPS İstekleri
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Ok aşağı -->
+                        <i class="fa-solid fa-arrow-down text-sky-400 animate-bounce"></i>
+
+                        <!-- Katman 2: API Gateway & Auth -->
+                        <div class="w-full grid grid-cols-2 gap-4 max-w-lg">
+                            <div class="p-4 rounded-xl bg-sky-950/40 border border-sky-500/40 text-center">
+                                <span class="text-xs font-mono text-sky-400 block">Edge Proxy</span>
+                                <span class="text-sm font-semibold text-white">Spring Cloud Gateway</span>
+                                <p class="text-[11px] text-slate-400 mt-1">Rate Limit & SSL</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-cyan-950/40 border border-cyan-500/40 text-center">
+                                <span class="text-xs font-mono text-cyan-400 block">Identity Provider</span>
+                                <span class="text-sm font-semibold text-white">OAuth2 / Keycloak</span>
+                                <p class="text-[11px] text-slate-400 mt-1">JWT Tokens</p>
+                            </div>
+                        </div>
+
+                        <!-- Ok aşağı -->
+                        <i class="fa-solid fa-arrow-down text-slate-600"></i>
+
+                        <!-- Katman 3: Mikroservisler -->
+                        <div class="w-full grid grid-cols-3 gap-4">
+                            <div class="ice-card p-4 rounded-xl text-center">
+                                <div class="w-8 h-8 mx-auto mb-2 rounded bg-sky-500/20 text-sky-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-user-check"></i>
+                                </div>
+                                <h4 class="text-sm font-semibold text-white">User Service</h4>
+                                <span class="text-[11px] font-mono text-slate-400">Spring Boot / JPA</span>
+                            </div>
+
+                            <div class="ice-card p-4 rounded-xl text-center">
+                                <div class="w-8 h-8 mx-auto mb-2 rounded bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                </div>
+                                <h4 class="text-sm font-semibold text-white">Order Service</h4>
+                                <span class="text-[11px] font-mono text-slate-400">Spring Boot / WebFlux</span>
+                            </div>
+
+                            <div class="ice-card p-4 rounded-xl text-center">
+                                <div class="w-8 h-8 mx-auto mb-2 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-credit-card"></i>
+                                </div>
+                                <h4 class="text-sm font-semibold text-white">Payment Service</h4>
+                                <span class="text-[11px] font-mono text-slate-400">Spring Boot / Saga</span>
+                            </div>
+                        </div>
+
+                        <!-- Katman 4: Event Bus & Messaging -->
+                        <div class="w-full p-4 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-center">
+                            <div class="flex items-center justify-center gap-2 text-sky-400 font-mono text-sm font-semibold mb-1">
+                                <i class="fa-solid fa-bolt"></i> Apache Kafka / Event Bus
+                            </div>
+                            <span class="text-xs text-slate-300">Asenkron iletişim, CQRS olayları ve veri tutarlılığı senkronizasyonu</span>
+                        </div>
+
+                        <!-- Katman 5: Veri Tabanları & Cache -->
+                        <div class="w-full grid grid-cols-2 gap-4">
+                            <div class="ice-card p-4 rounded-xl text-center">
+                                <i class="fa-solid fa-database text-cyan-400 text-xl mb-1"></i>
+                                <h4 class="text-sm font-semibold text-white">PostgreSQL Cluster</h4>
+                                <span class="text-[11px] text-slate-400">Master-Slave Replikasyon</span>
+                            </div>
+                            <div class="ice-card p-4 rounded-xl text-center">
+                                <i class="fa-solid fa-memory text-sky-400 text-xl mb-1"></i>
+                                <h4 class="text-sm font-semibold text-white">Redis Cache & Pub/Sub</h4>
+                                <span class="text-[11px] text-slate-400">Sub-millisecond Session Store</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. İLETİŞİM BÖLÜMÜ -->
+        <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center max-w-2xl mx-auto mb-14">
+                    <h2 class="text-xs font-mono tracking-widest text-sky-400 uppercase mb-2">// 06. İletişim</h2>
+                    <p class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Birlikte Yeni Bir Sistem İnşa Edelim</p>
+                    <p class="text-slate-400 mt-3 text-sm">
+                        Bir proje teklifi, danışmanlık ya da tam zamanlı iş fırsatları için dilediğiniz zaman bana ulaşabilirsiniz.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-8 bg-slate-900/60 p-6 sm:p-10 rounded-3xl border border-slate-800">
+                    <!-- İletişim Bilgileri (2 Kolon) -->
+                    <div class="md:col-span-2 space-y-6">
+                        <h3 class="text-lg font-bold text-white">İletişim Bilgileri</h3>
+                        <p class="text-sm text-slate-400">Genellikle 24 saat içerisinde dönüş yapıyorum.</p>
+
+                        <div class="space-y-4 text-sm">
+                            <div class="flex items-center space-x-3 text-slate-300">
+                                <div class="w-9 h-9 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <span>theahmet.095@gmail.com</span>
+                            </div>
+                            <div class="flex items-center space-x-3 text-slate-300">
+                                <div class="w-9 h-9 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <span>Aydın / Türkiye (Remote Açık)</span>
+                            </div>
+                            <div class="flex items-center space-x-3 text-slate-300">
+                                <div class="w-9 h-9 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </div>
+                                <span>linkedin.com/in/ahmet-tekin</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-800">
+                            <span class="text-xs font-mono text-slate-400 block mb-2">GPG Key Fingerprint</span>
+                            <code class="text-[11px] text-sky-300 font-mono bg-slate-950 p-2 rounded block break-all">
+                                4A8B 2C9E 7F12 9901 B45D
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- İletişim Formu (3 Kolon) -->
+                    <div class="md:col-span-3">
+                        <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1.5" for="name">İsim & Soyisim</label>
+                                <input type="text" id="name" required placeholder="Adınız" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-sm focus:outline-none focus:border-sky-400 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1.5" for="email">E-Posta Adresi</label>
+                                <input type="email" id="email" required placeholder="ornek@sirket.com" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-sm focus:outline-none focus:border-sky-400 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1.5" for="subject">Konu</label>
+                                <input type="text" id="subject" required placeholder="Örn: Mikroservis Danışmanlığı / İş Teklifi" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-sm focus:outline-none focus:border-sky-400 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1.5" for="message">Mesajınız</label>
+                                <textarea id="message" rows="4" required placeholder="Proje detayları veya mesajınız..." class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-sm focus:outline-none focus:border-sky-400 transition-colors resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> Mesajı İlet
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-10 px-4 text-center text-sm text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <i class="fa-brands fa-java text-sky-400 text-xl"></i>
+                <span class="font-mono text-slate-400 font-medium">Ahmet Tekin &copy; 2026</span>
+            </div>
+            <p class="text-xs text-slate-500">
+                Spring Boot & Clean Architecture felsefesiyle tasarlandı.
+            </p>
+            <div class="flex items-center space-x-4 text-slate-400">
+                <a href="#hero" class="hover:text-sky-400 text-xs font-mono">Yukarı Çık ↑</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bildirim Kutusu (Toast / Modal) -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 border border-sky-400/40 text-white px-5 py-4 rounded-2xl shadow-2xl flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-sm" id="toastTitle">Başarılı!</h4>
+                <p class="text-xs text-slate-300" id="toastMessage">Mesajınız başarıyla iletildi.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Fonksiyonları -->
+    <script>
+        // Mobil Menü Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // CV İndirme Simülasyonu
+        function downloadCv() {
+            showToast("Özgeçmiş Hazırlanıyor", "Ahmet_Yilmaz_Java_Backend_CV.pdf simüle edilerek indirildi.");
+        }
+
+        // İletişim Formu Gönderimi
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            showToast("Mesajınız Gönderildi!", `Teşekkürler ${name}, en kısa sürede geri dönüş yapacağım.`);
+            document.getElementById('contactForm').reset();
+        }
+
+        // Toast Bildirim Fonksiyonu
+        function showToast(title, message) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+
+            toast.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
